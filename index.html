@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latin Nouns Quiz</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        padding: 20px;
+    }
+    .quiz-container {
+        background: white;
+        padding: 20px;
+        max-width: 500px;
+        margin: auto;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        margin-bottom: 15px;
+    }
+    .option {
+        display: block;
+        margin: 8px 0;
+    }
+    button {
+        padding: 10px 15px;
+        margin-top: 15px;
+        background: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+    .result {
+        font-weight: bold;
+        margin-top: 20px;
+        display: inline-block;
+        color: "black";
+        background-color: "yellow";
+    }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h2 id="question">Question text</h2>
+    <div id="options"></div>
+    <button id="nextBtn">Next</button>
+    <div id="result"  class="result"></div>
+</div>
+
+<script>
+
+class Noun {
+  constructor(nominative, genitive, gender, singMeaning, plMeaning){
+    this.nominative = nominative;
+    this.genitive = genitive;
+    this.gender = gender;
+    this.singMeaning = singMeaning;
+    this.plMeaning = plMeaning;
+  }
+
+  //NOMINATIVE
+
+  get nominativeSing(){
+    return this.singNominative();
+  }
+
+  singNominative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.nominative;
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēs";
+    } else if (this.genitive.slice(-1,) == "i"){
+      return this.nominative;
+    } else if (this.genitive.slice(-2,) == "is"){
+        if (this.gender == "n"){
+          return this.nominative;
+        } else {
+          return this.nominative;
+        }
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.nominative;
+    }
+  }
+
+  get nominativeSingTrans(){
+    return this.singNominativeTrans();
+  }
+
+  singNominativeTrans(){
+    return this.singMeaning;
+  }
+
+    //GENITIVE
+
+  get genitiveSing(){
+      return this.singGenitive();
+  }
+
+  singGenitive(){
+    if (this.genitive.slice(-2,) == "ae"){
+        return this.genitive;
+    } else if (this.genitive.slice(-2,) == "ei"){
+        return this.genitive.slice(0,-2) + "ēī";
+    } else if (this.genitive.slice(-1,) == "i"){
+        return this.genitive.slice(0,-1) + "ī";
+    } else if (this.genitive.slice(-2,) == "is"){
+        return this.genitive;
+    } else if (this.genitive.slice(-2,) == "us"){
+        return this.genitive.slice(0,-2) + "ūs";
+    }
+  }
+
+  get genitiveSingTrans(){
+      return this.singGenitiveTrans();
+  }
+
+  singGenitiveTrans(){
+      return " of the " + this.singMeaning;
+  }
+
+    //DATIVE
+
+  get dativeSing(){
+      return this.singDative();
+  }
+
+  singDative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive;
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēī";
+    } else if (this.genitive.slice(-1,) == "i"){
+      return this.genitive.slice(0,-1) + "ō";
+    } else if (this.genitive.slice(-2,) == "is"){
+      return this.genitive.slice(0,-2) + "ī";
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "ūi";
+    }
+  }
+
+  get dativeSingTrans(){
+    return this.singDativeTrans();
+  }
+
+  singDativeTrans(){
+    return " to the " + this.singMeaning;
+  }
+
+  //ACCUSATIVE
+
+  get accusativeSing(){
+    return this.singAccusative();
+  }
+
+  singAccusative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive.slice(0,-2) + "am";
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "em";
+    } else if (this.gender == "n" && this.genitive.slice(-1,) == "i"){
+      return this.nominative;
+    } else if (this.genitive.slice(-1,) == "i"){
+        return this.genitive.slice(0,-1) + "um";
+    } else if (this.genitive.slice(-2,) == "is"){
+        if (this.gender == "n"){
+          return this.nominative;
+        } else {
+          return this.genitive.slice(0,-2) + "em";
+        }
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "um";
+    }
+  }
+
+  get accusativeSingTrans(){
+    return this.singAccusativeTrans();
+  }
+
+  singAccusativeTrans(){
+      return " the " + this.singMeaning;
+  }
+
+  //ablative
+
+  get ablativeSing(){
+    return this.singAblative();
+  }
+
+  singAblative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive.slice(0,-2) + "ā";
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ē";
+    } else if (this.genitive.slice(-1,) == "i"){
+      return this.genitive.slice(0,-1) + "ō";
+    } else if (this.genitive.slice(-2,) == "is"){
+      if (this.gender == "n"){
+        if (this.nominative.slice(-2,) == "re" || this.nominative.slice(-2,) == "al"){
+          return this.genitive.slice(0,-2) + "ī";
+        } else {
+        return this.genitive.slice(0,-2) + "e";
+        }
+      } else {
+        return this.genitive.slice(0,-2) + "e";
+      }
+
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "ū";
+    }
+  }
+
+  get ablativeSingTrans(){
+    return this.singAblativeTrans();
+  }
+
+  singAblativeTrans(){
+    return " by the " + this.singMeaning;
+  }
+
+  //Vocative
+  get vocativeSing(){
+    return this.singVocative();
+  }
+
+  singVocative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.nominative;
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēs";
+    } else if (this.genitive.slice(-1,) == "i"){
+      if (this.gender == "n"){
+        return this.nominative;
+      } else if (this.gender == "m"){
+          if (this.nominative.slice(-3,) == "ius"){
+            return this.genitive.slice(0,-2);
+          } else if (this.nominative.slice(-2,) == "us"){
+            return this.genitive.slice(0,-1) + "e";
+          } else {
+            return this.nominative;
+          }
+      }
+    } else if (this.genitive.slice(-2,) == "is"){
+        return this.nominative;
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.nominative;
+    }
+  }
+
+  get vocativeSingTrans(){
+    return this.singVocativeTrans();
+  }
+
+  singVocativeTrans(){
+      let vocative = this.singMeaning;
+      return vocative[0] + vocative.substring(1) + "!";
+    }
+
+
+  //NOMINATIVE PLURAL
+
+  get nominativePl(){
+    return this.plNominative();
+  }
+
+  plNominative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive.slice(0,-2) + "ae";
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēs";
+    } else if (this.genitive.slice(-1,) == "i"){
+      if (this.gender == "n"){
+        return this.genitive.slice(0,-1) + "a";
+      } else {
+        return this.genitive.slice(0,-1) + "ī";
+      }
+    } else if (this.genitive.slice(-2,) == "is"){
+        if (this.gender == "n"){
+          if (this.nominative.slice(-2,) == "re" || this.nominative.slice(-2,) == "al"){
+            return this.genitive.slice(0,-2) + "ia";
+          } else {
+          return this.genitive.slice(0,-2) + "a";
+          }
+        } else {
+          return this.genitive.slice(0,-2) + "ēs";
+        }
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "ūs";
+    }
+  }
+
+  get nominativePlTrans(){
+    return this.plNominativeTrans();
+  }
+
+  plNominativeTrans(){
+    return this.plMeaning;
+  }
+
+    //GENITIVE
+
+  get genitivePl(){
+      return this.plGenitive();
+  }
+
+  plGenitive(){
+    if (this.genitive.slice(-2,) == "ae"){
+        return this.genitive.slice(0,-2) + "ārum";
+    } else if (this.genitive.slice(-2,) == "ei"){
+        return this.genitive.slice(0,-2) + "ērum";
+    } else if (this.genitive.slice(-1,) == "i"){
+        return this.genitive.slice(0,-1) + "ōrum";
+    } else if (this.genitive.slice(-2,) == "is"){
+        if (this.nominative == "canis"){
+            return this.genitive.slice(0,-2) + "um";
+        } else if (this.nominative.slice(-2,) == "rb" || this.nominative.slice(-2,) == "nt" || this.nominative.slice(-2,) == "rt"){
+        // if (this.nominative.slice(-2,) == "rb" || "nt" || "rt"){
+          return this.genitive.slice(0,-2) + "ium";
+        } else if (this.gender == "n"){
+            if (this.nominative.slice(-2,) == "re" || this.nominative.slice(-2,) == "al"){
+              return this.genitive.slice(0,-2) + "ium";
+            } else {
+              return this.genitive.slice(0,-2) + "um";
+            }
+        } else if (this.nominative == this.genitive){
+          return this.genitive.slice(0,-2) + "ium";
+        } else {
+          return this.genitive.slice(0,-2) + "um";
+        }
+    } else if (this.genitive.slice(-2,) == "us"){
+        return this.genitive.slice(0,-2) + "uum";;
+    }
+  }
+
+  get genitivePlTrans(){
+      return this.plGenitiveTrans();
+  }
+
+  plGenitiveTrans(){
+      return " of the " + this.plMeaning;
+  }
+
+    //DATIVE
+
+  get dativePl(){
+      return this.plDative();
+  }
+
+  plDative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive.slice(0,-2) + "īs";
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēbus";
+    } else if (this.genitive.slice(-1,) == "i"){
+      return this.genitive.slice(0,-1) + "īs";
+    } else if (this.genitive.slice(-2,) == "is"){
+      return this.genitive.slice(0,-2) + "ibus";
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "ibus";
+    }
+  }
+
+  get dativePlTrans(){
+    return this.plDativeTrans();
+  }
+
+  plDativeTrans(){
+    return " to the " + this.plMeaning;
+  }
+
+  //ACCUSATIVE
+
+  get accusativePl(){
+    return this.plAccusative();
+  }
+
+  plAccusative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive.slice(0,-2) + "ās";
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēs";
+    } else if (this.genitive.slice(-1,) == "i"){
+      if (this.gender == "n"){
+        return this.genitive.slice(0,-1) + "a";
+      } else {
+        return this.genitive.slice(0,-1) + "ōs";
+      }
+    } else if (this.genitive.slice(-2,) == "is"){
+        if (this.gender == "n"){
+          console.log(this.nominative.slice(-2,));
+          if (this.nominative.slice(-2,) == "re" || this.nominative.slice(-2,) == "al"){
+            return this.genitive.slice(0,-2) + "ia";
+          } else {
+          return this.genitive.slice(0,-2) + "a";
+          }
+        } else {
+          return this.genitive.slice(0,-2) + "ēs";
+        }
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "ūs";
+    }
+  }
+
+  get accusativePlTrans(){
+    return this.plAccusativeTrans();
+  }
+
+  plAccusativeTrans(){
+      return " the " + this.plMeaning;
+  }
+
+  //ablative
+
+  get ablativePl(){
+    return this.plAblative();
+  }
+
+  plAblative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive.slice(0,-2) + "īs";
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēbus";
+    } else if (this.genitive.slice(-1,) == "i"){
+      return this.genitive.slice(0,-1) + "īs";
+    } else if (this.genitive.slice(-2,) == "is"){
+      return this.genitive.slice(0,-2) + "ibus";
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "ibus";
+    }
+  }
+
+  get ablativePlTrans(){
+    return this.plAblativeTrans();
+  }
+
+  plAblativeTrans(){
+    return " by the " + this.plMeaning;
+  }
+
+  //Vocative Plural
+
+  get vocativePl(){
+    return this.plVocative();
+  }
+
+  plVocative(){
+    if (this.genitive.slice(-2,) == "ae"){
+      return this.genitive.slice(0,-2) + "ae";
+    } else if (this.genitive.slice(-2,) == "ei"){
+      return this.genitive.slice(0,-2) + "ēs";
+    } else if (this.genitive.slice(-1,) == "i"){
+      if (this.gender == "n"){
+        return this.genitive.slice(0,-1) + "a";
+      } else {
+        return this.genitive.slice(0,-1) + "ī";
+      }
+    } else if (this.genitive.slice(-2,) == "is"){
+      if (this.gender == "n"){
+        if (this.nominative.slice(-2,) == "re" || this.nominative.slice(-2,) == "al"){
+          return this.genitive.slice(0,-2) + "ia";
+        } else {
+        return this.genitive.slice(0,-2) + "a";
+        }
+      } else {
+        return this.genitive.slice(0,-2) + "ēs";
+      }
+    } else if (this.genitive.slice(-2,) == "us"){
+      return this.genitive.slice(0,-2) + "ūs";
+    }
+  }
+
+  get vocativePlTrans(){
+    return this.plVocativeTrans();
+  }
+
+  plVocativeTrans(){
+    let vocative = this.plMeaning;
+    return vocative[0] + vocative.substring(1) + "!";
+  }
+
+}
+
+
+//VERBS
+
+
+class Verb {
+  constructor(first, second, third, fourth, verb, verbing, verbed,ppVerb){
+  this.first = first;
+  this.second = second;
+  this.third = third;
+  this.fourth = fourth;
+  this.verb = verb;
+  this.verbing = verbing;
+  this.verbed = verbed;
+  this.ppVerb = ppVerb;
+  }
+
+  //PRESENT ACTIVE INFINITIVE
+
+  get actInfPres(){
+    return this.presActInf();
+  }
+
+  presActInf(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "āre";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second;
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second;
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second;
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "īre";
+    }
+  }
+
+  get actInfPresTrans(){
+    return this.presActInfTrans();
+  }
+
+  presActInfTrans(){
+    return " to " +  this.verb;
+  }
+
+  //SINGULAR IMPERATIVE
+
+  get imperativeSing(){
+    return this.singImperative();
+  }
+
+  singImperative(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ā";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ē";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      if (this.second == "facere"){
+        return "fac";
+      } else {
+      return this.second.slice(0,-3) + "e";
+      }
+    } else if (this.second.slice(-3,) == "ere"){
+        if (this.second == "ducere"){
+          return "duc";
+        } else if (this.second == "dicere"){
+          return "dic";
+        } else {
+          return this.second.slice(0,-3) + "e";
+        }
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "ī";
+    }
+  }
+
+  get imperativeSingTrans(){
+    let imperative = this.verb;
+    return imperative[0].toUpperCase() + imperative.substring(1) +  "!";
+  }
+
+
+
+  //PLURAL IMPERATIVE
+
+  get imperativePl(){
+    return this.plImperative();
+  }
+
+  plImperative(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "āte";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēte";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ite";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ite";
+    } else if(this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "īte";
+    }
+  }
+
+  get imperativePlTrans(){
+    let imperative = this.verb;
+    return imperative[0].toUpperCase() + imperative.substring(1) +  ", ya'll!";
+  }
+
+  plImperativeTrans(){
+    return this.imperativePlTrans();
+  }
+
+
+
+
+  //PRESENT TENSE
+  get firstSingPres(){
+    return this.presFirstSing();
+  }
+
+  presFirstSing(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ō";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "eō";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iō";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ō";
+
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "iō";
+    }
+  }
+
+
+
+  get firstSingPresTrans(){
+    return this.presFirstSingTrans();
+  }
+
+  presFirstSingTrans(){
+    return "I " +  this.verb;
+  }
+
+  get secondSingPres(){
+    return this.presSecondSing();
+  }
+
+  presSecondSing(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ās";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēs";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "is";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "is";
+
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "īs";
+    }
+  }
+
+  get secondSingPresTrans(){
+    return this.presSecondSingTrans();
+  }
+
+  presSecondSingTrans(){
+    return "You " +  this.verb;
+  }
+
+  get thirdSingPres(){
+    return this.presThirdSing();
+  }
+
+  presThirdSing(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "at";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "et";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "it";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "it";
+
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "it";
+    }
+  }
+
+  get thirdSingPresTrans(){
+    return this.presThirdSingTrans();
+  }
+
+  presThirdSingTrans(){
+    return this.verb + "s";
+  }
+
+  get firstPlPres(){
+    return this.presFirstPl();
+  }
+
+  presFirstPl(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "āmus";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēmus";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "imus";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "imus";
+
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "īmus";
+    }
+  }
+
+  get firstPlPresTrans(){
+    return this.presFirstPlTrans();
+  }
+
+  presFirstPlTrans(){
+    return "We " +  this.verb;
+  }
+
+  get secondPlPres(){
+    return this.presSecondPl();
+  }
+
+  presSecondPl(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ātis";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ētis";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "itis";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "itis";
+
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "ītis";
+    }
+  }
+
+  get secondPlPresTrans(){
+    return this.presSecondPlTrans();
+  }
+
+  presSecondPlTrans(){
+    return "You " +  this.verb;
+  }
+
+
+  get thirdPlPres(){
+    return this.presThirdPl();
+  }
+
+  presThirdPl(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ant";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ent";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iunt";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "unt";
+
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "īunt";
+    }
+  }
+
+  get thirdPlPresTrans(){
+    return this.presThirdPlTrans();
+  }
+
+  presThirdPlTrans(){
+    return this.verb;
+  }
+
+//imperfect
+
+  get firstSingImp(){
+   return this.impFirstSing();
+ }
+
+  impFirstSing(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ābam";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēbam";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iēbam";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ēbam";
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "iēbam";
+    }
+  }
+
+
+
+  get firstSingImpTrans(){
+    return this.impFirstSingTrans();
+  }
+
+  impFirstSingTrans(){
+    return "I was " +  this.verbing;
+  }
+
+  get secondSingImp(){
+    return this.impSecondSing();
+  }
+
+  impSecondSing(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ābās";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēbās";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iēbās";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ēbās";
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "iēbās";
+    }
+  }
+
+  get secondSingImpTrans(){
+    return this.impSecondSingTrans();
+  }
+
+  impSecondSingTrans(){
+    return "You were " +  this.verbing;
+  }
+
+  get thirdSingImp(){
+    return this.impThirdSing();
+  }
+
+  impThirdSing(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "abat";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēbat";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iēbat";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ēbat";
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "iēbat";
+    }
+  }
+
+  get thirdSingImpTrans(){
+    return this.impThirdSingTrans();
+  }
+
+  impThirdSingTrans(){
+    return "was " +  this.verbing;
+  }
+
+  get firstPlImp(){
+    return this.impFirstPl();
+  }
+
+  impFirstPl(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ābāmus";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēbāmus";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iēbāmus";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ēbāmus";
+
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "iēbāmus";
+    }
+  }
+
+  get firstPlImpTrans(){
+    return this.impFirstPlTrans();
+  }
+
+  impFirstPlTrans(){
+    return "We were " +  this.verbing;
+  }
+
+  get secondPlImp(){
+    return this.impSecondPl();
+  }
+
+  impSecondPl(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "ābātis";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēbātis";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iēbātis";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ēbātis";
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "iēbātis";
+    }
+  }
+
+  get secondPlImpTrans(){
+    return this.impSecondPlTrans();
+  }
+
+  impSecondPlTrans(){
+    return "You were " +  this.verbing;
+  }
+
+
+  get thirdPlImp(){
+    return this.impThirdPl();
+  }
+
+  impThirdPl(){
+    if (this.second.slice(-3,) == "are"){
+      return this.second.slice(0,-3) + "abant";
+    } else if (this.second.slice(-3,) == "ēre"){
+      return this.second.slice(0,-3) + "ēbant";
+    } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "iēbant";
+    } else if (this.second.slice(-3,) == "ere"){
+      return this.second.slice(0,-3) + "ēbant";
+    } else if (this.second.slice(-3,) == "ire"){
+      return this.second.slice(0,-3) + "iēbant";
+    }
+  }
+
+  get thirdPlImpTrans(){
+    return this.impThirdPlTrans();
+  }
+
+  impThirdPlTrans(){
+    return "were " +  this.verbing;
+  }
+
+  //future tense
+
+    get firstSingFut(){
+     return this.futFirstSing();
+   }
+
+    futFirstSing(){
+      if (this.second.slice(-3,) == "are"){
+        return this.second.slice(0,-3) + "ābō";
+      } else if (this.second.slice(-3,) == "ēre"){
+        return this.second.slice(0,-3) + "ēbō";
+      } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "iam";
+      } else if (this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "am";
+      } else if (this.second.slice(-3,) == "ire"){
+        return this.second.slice(0,-3) + "iam";
+      }
+    }
+
+
+
+    get firstSingFutTrans(){
+      return this.futFirstSingTrans();
+    }
+
+    futFirstSingTrans(){
+      return "I will " +  this.verb;
+    }
+
+    get secondSingFut(){
+      return this.futSecondSing();
+    }
+
+    futSecondSing(){
+      if (this.second.slice(-3,) == "are"){
+        return this.second.slice(0,-3) + "ābis";
+      } else if (this.second.slice(-3,) == "ēre"){
+        return this.second.slice(0,-3) + "ēbis";
+      } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "iēs";
+      } else if (this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "ēs";
+      } else if (this.second.slice(-3,) == "ire"){
+        return this.second.slice(0,-3) + "iēs";
+      }
+    }
+
+    get secondSingFutTrans(){
+      return this.futSecondSingTrans();
+    }
+
+    futSecondSingTrans(){
+      return "You will " +  this.verb;
+    }
+
+    get thirdSingFut(){
+      return this.futThirdSing();
+    }
+
+    futThirdSing(){
+      if (this.second.slice(-3,) == "are"){
+        return this.second.slice(0,-3) + "ābit";
+      } else if (this.second.slice(-3,) == "ēre"){
+        return this.second.slice(0,-3) + "ēbit";
+      } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "iet";
+      } else if (this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "et";
+      } else if (this.second.slice(-3,) == "ire"){
+        return this.second.slice(0,-3) + "iet";
+      }
+    }
+
+    get thirdSingFutTrans(){
+      return this.futThirdSingTrans();
+    }
+
+    futThirdSingTrans(){
+      return "will " +  this.verb;
+    }
+
+    get firstPlFut(){
+      return this.futFirstPl();
+    }
+
+    futFirstPl(){
+      if (this.second.slice(-3,) == "are"){
+        return this.second.slice(0,-3) + "ābimus";
+      } else if (this.second.slice(-3,) == "ēre"){
+        return this.second.slice(0,-3) + "ēbimus";
+      } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "iēmus";
+      } else if (this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "ēmus";
+
+      } else if (this.second.slice(-3,) == "ire"){
+        return this.second.slice(0,-3) + "iēmus";
+      }
+    }
+
+    get firstPlFutTrans(){
+      return this.futFirstPlTrans();
+    }
+
+    futFirstPlTrans(){
+      return "We will " +  this.verb;
+    }
+
+    get secondPlFut(){
+      return this.futSecondPl();
+    }
+
+    futSecondPl(){
+      if (this.second.slice(-3,) == "are"){
+        return this.second.slice(0,-3) + "ābitis";
+      } else if (this.second.slice(-3,) == "ēre"){
+        return this.second.slice(0,-3) + "ēbitis";
+      } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "iētis";
+      } else if (this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "ētis";
+      } else if (this.second.slice(-3,) == "ire"){
+        return this.second.slice(0,-3) + "iētis";
+      }
+    }
+
+    get secondPlFutTrans(){
+      return this.futSecondPlTrans();
+    }
+
+    futSecondPlTrans(){
+      return "You will " +  this.verb;
+    }
+
+
+    get thirdPlFut(){
+      return this.futThirdPl();
+    }
+
+    futThirdPl(){
+      if (this.second.slice(-3,) == "are"){
+        return this.second.slice(0,-3) + "ābunt";
+      } else if (this.second.slice(-3,) == "ēre"){
+        return this.second.slice(0,-3) + "ēbunt";
+      } else if (this.first.slice(-2,) == "io" && this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "ient";
+      } else if (this.second.slice(-3,) == "ere"){
+        return this.second.slice(0,-3) + "ent";
+      } else if (this.second.slice(-3,) == "ire"){
+        return this.second.slice(0,-3) + "ient";
+      }
+    }
+
+    get thirdPlFutTrans(){
+      return this.futThirdPlTrans();
+    }
+
+    futThirdPlTrans(){
+      return "will " +  this.verb;
+    }
+
+   //PERFECT tense
+
+   get firstSingPer(){
+    return this.perFirstSing();
+  }
+
+   perFirstSing(){
+     return this.third.slice(0,-1) + "ī";
+   }
+
+   get firstSingPerTrans(){
+     return this.perFirstSingTrans();
+   }
+
+   perFirstSingTrans(){
+     return "I " +  this.verbed;
+   }
+
+   get secondSingPer(){
+    return this.perSecondSing();
+  }
+
+   perSecondSing(){
+     return this.third.slice(0,-1) + "istī";
+   }
+
+   get secondSingPerTrans(){
+     return this.perSecondSingTrans();
+   }
+
+   perSecondSingTrans(){
+     return "You " +  this.verbed;
+   }
+
+   get thirdSingPer(){
+    return this.perThirdSing();
+  }
+
+   perThirdSing(){
+     return this.third.slice(0,-1) + "it";
+   }
+
+   get thirdSingPerTrans(){
+     return this.perThirdSingTrans();
+   }
+
+   perThirdSingTrans(){
+     return this.verbed;
+   }
+
+   get firstPlPer(){
+    return this.perFirstPl();
+  }
+
+   perFirstPl(){
+     return this.third.slice(0,-1) + "imus";
+   }
+
+   get firstPlPerTrans(){
+     return this.perFirstPlTrans();
+   }
+
+   perFirstPlTrans(){
+     return "We " +  this.verbed;
+   }
+
+   get secondPlPer(){
+    return this.perSecondPl();
+  }
+
+   perSecondPl(){
+     return this.third.slice(0,-1) + "istis";
+   }
+
+   get secondPlPerTrans(){
+     return this.perSecondPlTrans();
+   }
+
+   perSecondPlTrans(){
+     return "You " +  this.verbed;
+   }
+
+   get thirdPlPer(){
+    return this.perThirdPl();
+  }
+
+   perThirdPl(){
+     return this.third.slice(0,-1) + "ērunt";
+   }
+
+   get thirdPlPerTrans(){
+     return this.perThirdPlTrans();
+   }
+
+   perThirdPlTrans(){
+     return this.verbed;
+   }
+
+   //PLUPERFECT getElementsByName
+
+   get firstSingPlu(){
+    return this.pluFirstSing();
+  }
+
+   pluFirstSing(){
+     return this.third.slice(0,-1) + "eram";
+   }
+
+   get firstSingPluTrans(){
+     return this.pluFirstSingTrans();
+   }
+
+   pluFirstSingTrans(){
+     return "I had " +  this.ppVerb;
+   }
+
+   get secondSingPlu(){
+    return this.pluSecondSing();
+  }
+
+   pluSecondSing(){
+     return this.third.slice(0,-1) + "eras";
+   }
+
+   get secondSingPluTrans(){
+     return this.pluSecondSingTrans();
+   }
+
+   pluSecondSingTrans(){
+     return "You had " +  this.ppVerb;
+   }
+
+   get thirdSingPlu(){
+    return this.pluThirdSing();
+  }
+
+   pluThirdSing(){
+     return this.third.slice(0,-1) + "erat";
+   }
+
+   get thirdSingPluTrans(){
+     return this.pluThirdSingTrans();
+   }
+
+   pluThirdSingTrans(){
+     return "had " +  this.ppVerb;
+   }
+
+   get firstPlPlu(){
+    return this.pluFirstPl();
+  }
+
+   pluFirstPl(){
+     return this.third.slice(0,-1) + "eramus";
+   }
+
+   get firstPlPluTrans(){
+     return this.pluFirstPlTrans();
+   }
+
+   pluFirstPlTrans(){
+     return "we had " +  this.ppVerb;
+   }
+
+   get secondPlPlu(){
+    return this.pluSecondPl();
+  }
+
+   pluSecondPl(){
+     return this.third.slice(0,-1) + "eratis";
+   }
+
+   get secondPlPluTrans(){
+     return this.pluSecondPlTrans();
+   }
+
+   pluSecondPlTrans(){
+     return "y'all had " +  this.ppVerb;
+   }
+
+   get thirdPlPlu(){
+    return this.pluThirdPl();
+  }
+
+   pluThirdPl(){
+     return this.third.slice(0,-1) + "erant";
+   }
+
+   get thirdPlPluTrans(){
+     return this.pluThirdPlTrans();
+   }
+
+   pluThirdPlTrans(){
+     return "had " +  this.ppVerb;
+   }
+
+   //FUTURE PERFECT
+
+   get firstSingFutPer(){
+    return this.futPerFirstSing();
+  }
+
+   futPerFirstSing(){
+     return this.third.slice(0,-1) + "ero";
+   }
+
+   get firstSingFutPerTrans(){
+     return this.futPerFirstSingTrans();
+   }
+
+   futPerFirstSingTrans(){
+     return "I will have " +  this.verbed;
+   }
+
+   get secondSingFutPer(){
+    return this.futPerSecondSing();
+  }
+
+   futPerSecondSing(){
+     return this.third.slice(0,-1) + "eris";
+   }
+
+   get secondSingFutPerTrans(){
+     return this.futPerSecondSingTrans();
+   }
+
+   futPerSecondSingTrans(){
+     return "You will have " +  this.ppVerb;
+   }
+
+   get thirdSingFutPer(){
+    return this.futPerThirdSing();
+  }
+
+   futPerThirdSing(){
+     return this.third.slice(0,-1) + "erit";
+   }
+
+   get thirdSingFutPerTrans(){
+     return this.futPerThirdSingTrans();
+   }
+
+   futPerThirdSingTrans(){
+     return "will have " +  this.ppVerb;
+   }
+
+   get firstPlFutPer(){
+    return this.futPerFirstPl();
+  }
+
+   futPerFirstPl(){
+     return this.third.slice(0,-1) + "erimus";
+   }
+
+   get firstPlFutPerTrans(){
+     return this.futPerFirstPlTrans();
+   }
+
+   futPerFirstPlTrans(){
+     return "We will have " +  this.ppVerb;
+   }
+
+   get secondPlFutPer(){
+    return this.futPerSecondPl();
+  }
+
+   futPerSecondPl(){
+     return this.third.slice(0,-1) + "eritis";
+   }
+
+   get secondPlFutPerTrans(){
+     return this.futPerSecondPlTrans();
+   }
+
+   futPerSecondPlTrans(){
+     return "You will have " +  this.ppVerb;
+   }
+
+   get thirdPlFutPer(){
+    return this.futPerThirdPl();
+  }
+
+   futPerThirdPl(){
+     return this.third.slice(0,-1) + "erint";
+   }
+
+   get thirdPlFutPerTrans(){
+     return this.futPerThirdPlTrans();
+   }
+
+   futPerThirdPlTrans(){
+     return "will have " +  this.ppVerb;
+   }
+
+}
+
+
+
+/*
+
+// Array to hold the new noun forms
+ var newNoun = [];
+ var newNoun2 = [];
+ var newNounArray = [];
+ var array = [];
+
+var userInput1 = "";
+ var userInput2 = "";
+ var userArray = [];
+ var button = [];
+ var button1 = [];
+ var verb = [];
+ var passiveVerb= [];
+ var dativeVerb = [];
+ var verb3rdPlural = [];
+ 
+ var sub = [];
+ var subject = [];
+
+ //var subject2 = [];
+ var dirObj = [];
+ var directObject = [];
+
+ var randSingPlNouns = [];
+ //var directObject2 = [];
+ var indirectObject = [];
+ var possession = [];
+ var ablative = [];
+
+ var ranNoun1 = new Noun(array[0][0], array[0][1], array[0][2], array[0][3], array[0][4]);
+ var ranNoun2 = new Noun(array[1][0], array[1][1], array[1][2], array[1][3], array[1][4]) ;
+
+ 
+
+ var score = 0;
+ var randomIndex = 0;
+ var ranVerbIndex = 0;
+ var ranPasVbIndx = 0;
+ var ranVerb3rdPluralIndex = 0;
+ var ranSubjectIndex = 0;
+ var ranDirObjIndx = 0;
+ var ranIndirectObjectIndex = 0;
+ var ranPossessionIndex = 0;
+ var ranAblativeIndex = 0;
+ var ranNounIndx = 0;
+ var ranDatVerbIndex = 0;
+
+ var currentQuestion = 0;
+  
+
+ var questions = [];
+ var answer = "";
+ var answers = [];
+ var noun = [];
+
+ // VERBS
+
+ var wordList =[];
+ var ranVerbIndx = 0
+ //var ranVerb = new Verb(verbArray[0],verbArray[1],verbArray[2],verbArray[3],verbArray[4],verbArray[5],verbArray[6],verbArray[7]);
+ var verbArray = [];
+
+
+ */
+
+function shuffle(array){
+	var currentIndex = array.length;
+	var temporaryValue;
+
+	while (currentIndex > 0){
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex --;
+
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+		return array;
+}
+
+//console.log(ranNoun1.nominativeSing)
+
+var array = [];
+/*
+var array = [["umbra","umbrae","f","ghost","ghosts"],["regina", "reginae","f","queen","queens"],["magistra", "magistrae","f","teacher","teachers"]];
+var array1 = [["auriga", "aurigae","m","charioteer","charioteers"],["dea","deae","f","goddess","goddesses"],["pirata", "piratae","m","pirate","pirates"],["nauta","nautae","m","sailor","sailors"]];
+var array2 = [["cena","cenae","f","dinner","dinners"],["toga","togae","f","toga","togas"],["tunica","tunicae","f","tunic","tunics"],["corona", "corona","f","crown","crowns"],["culpa", "culpae","f","fault","faults"],["flamma", "flammae","f","flame","flames"],["mensa", "mensae","f","table","tables"],["pecunia", "pecunia","f","money","money"],["vita", "vitae","f","life","lives"]];
+var array3 = [["arena", "arenae","f","arena","arenas"],["ara", "arae","f","altar","altars"],["piscina","piscinae","f","fishpond","fishponds"],["ianua","ianuae","f","door","doors"],["porta","portae","f","gate","gates"],["via","viae","f","street","streets"]["villa","villae","f","house","houses"],["silva","silvae","f","forest","forests"],["aqua","aquae","f","water","waters"],["casa", "casae","f","cottage","cottages"],["caupona", "cauponae","f","inn","inn"],["fossa", "fossae","f","ditch","ditches"],["culina", "culinae","f","kitchen","kitchens"],["rosa","rosae","f","rose","roses"],["luna","lunae","f","moon","moons"],["stella","stellae","f","star","stars"],["unda", "undae","f","wave","waves"],["uva", "uvae","f","grape","bunch of grapes"]];
+var array4 = [["caupona", "cauponae","f","inn","inn"],["fossa", "fossae","f","ditch","ditches"],["culina", "culinae","f","kitchen","kitchens"],["rosa","rosae","f","rose","roses"],["luna","lunae","f","moon","moons"],["stella","stellae","f","star","stars"],["unda", "undae","f","wave","waves"],["uva", "uvae","f","grape","bunch of grapes"]];
+var array5 = [["via","viae","f","street","streets"]["villa","villae","f","house","houses"],["silva","silvae","f","forest","forests"],["aqua","aquae","f","water","waters"],["casa", "casae","f","cottage","cottages"]];
+var array6 = [["hasta","hastae","f","spear","spears"],["lupa", "lupae","f","she-wolf","she-wolves"]];
+var array7 = [["ursa","ursae","f","bear","bears"],["lupa", "lupae","f","she-wolf","she-wolves"],["rana","ranae","f","frog","frogs"],["aquila","aquilae","f","eagle","eagless"]];
+
+var array8 = [["amica","amicae","f","girl friend","girl friends"],["puella","puellae","f","girl","girls"],["agricola","agricolae","m","farmer","farmers"],["femina","feminae","f","woman","women"]];
+var array9 = [["poeta","poetae","m","poet","poets"],["ancilla","ancillae","f","maid servant","maid servants"],["domina", "dominae","f","mistress","mistresses"]];
+
+
+
+array = [["amicus","amici","m","friend","friends"],["vilicus", "vilici","m","overseer","overseers"],["puer","pueri","m","boy","boys"]];
+array1 = [["dominus", "domini","m","master","masters"],["mendicus", "mendici","m","beggar","beggars"],["libertus","liberti","m","freedman","freedmen"]];
+array2 = [["hortus","horti","m","garden","gardens"],["ager","agri","m","field","fields"],["atrium", "atrii","n","main room","main rooms"],["templum", "templi","n","temple","temples"]];
+array3 = [["triclinium", "triclinii","n","dining room","dining rooms"],["plaustrum", "plaustri","n","cart","carts"],["templum", "templi","n","temple","temples"],["lectus", "lecti","m","bed","beds"],["murus", "muri","m","wall","walls"]];
+array4 = [["locus", "loci","m","place","places"],["morbus", "morbi","m","illness","illnesses"],["anulus", "anuli","m","ring","rings"],["annus", "anni","m","year","years"],["cibus", "cibi","m","food","food"]];
+array5 = [["auxilium", "auxilii","n","help","aids"],["aedificium", "aedificii","n","building","buildings"],["caelum", "caeli","n","sky","skies"],["aurum", "auri","n","gold","gold"],["bellum", "belli","n","war","wars"],["consiliium", "consilii","n","plan","plans"],["donum", "doni","n","gift","gifts"],["gaudium", "gaudii","n","joy","joys"],["ientaculum", "ientaculi","n","breakfast","breakfasts"],["oppidum", "oppidi","n","town","towns"],["osculum", "osculi","n","kiss","kisses"],["periculum", "periculi","n","danger","dangers"],["regnum", "regni","n","kingdom","kingdoms"],["somnium", "somnii","n","dream","dreams"],["vinum", "vini","n","wine","wine"]];
+array6 = [["saxum", "saxi","n","rock","rocks"],["gladius", "gladii","m","sword","swords"],["telum", "teli","n","javelin","javelins"]];
+array7 =[["lupus", "lupi","m","wolf","wolves"],["porcus", "porci","m","pig","pigs"],["equus", "equi","m","horse","horses"]];
+array8 = [["servus","servi","m","slave","slaves"],["vir", "viri","m","man","men"],["magister", "magistri","m","teacher","teachers"]];
+array9 = [["captivus","captivi","m","captive","captives"],["filius","filii","m","son","sons"]];
+
+*/
+array = [["mater", "matris","f","mother","mothers"],["parens", "parentis","m","parent","parent"],["soror", "sororis","f","sister","sisters"],["caupo", "cauponis","m","innkeeper","innkeepers"]];
+array1 = [["mulier", "mulieris","f","woman","women"],["rex", "regis","m","king","kings"],["fur", "furis","m","thief","thieves"],["haruspex", "haruspicis","m","soothsayer","soothsayers"]];
+array2 = [["pons", "pontis","m","bridge","bridges"],["mons", "montis","m","mountain","mountains"],["litus", "litoris","n","shore","shores"],["lapis", "lapidis","m","stone","stones"],["navis", "navis","f","ship","ships"]];
+array3 = [["caput", "capitis","n","head","heads"],["vulnus", "vulneris","n","wound","wounds"],["pes", "pedis","m","foot","feet"]];
+array4 = [["aestas", "aesatis","f","summer","summers"],["imber", "imbris","m","rain","rain"],["arbor", "arboris","f","tree","trees"],["fragor", "fragoris","m","noise","noises"]];
+array5 = [["tempus", "temporis","n","time","times"],["cor", "cordis","n","heart","hearts"],["finis", "finis","m","end","boundaries"],["funus", "funeris","n","funeral","funerals"],["iter", "itineris","n","journey","journeys"],["laus", "laudis","f","praise","praises"],["munus", "muneris","n","gift","gifts"],["mors", "mortis","f","death","deaths"],["nubes", "nubis","f","cloud","clouds"],["nox", "noctis","f","night","nights"],["onus", "oneris","n","burden","burdens"],["os", "ossis","n","bone","bones"],["os", "oris","n","mouth","mouths"],["pecus", "pecoris","n","livestock","sheep and cattle"]];
+array6 = [["ars", "artis","f","skill","skills"],["pugio", "pugionis","m","dagger","daggers"]];
+array7 = [["avis", "avis","f","bird","birds"],["mus", "muris","m","mouse","mice"],["leo", "leonis","m","lion","lions"],["bos", "bovis","m","ox","oxen"],["glis", "gliris","m","dormouse","dormice"],["canis", "canis","m","dog","dogs"]];
+array8 = [["virgo", "virginis","f","maiden","maidens"],["frater", "fratris","m","brother","brothers"],["pater", "patris","m","father","fathers"]];
+array9 = [["civis", "civis","m","citizen","citizen"],["custos", "custodis","m","guard","guards"],["infans", "infantis","m","infant","infants"]];
+
+/*
+array10 = [["aestas", "aesatis","f","summer","summers"],["imber", "imbris","m","rain","rain"],["arbor", "arboris","f","tree","trees"],["fragor", "fragoris","m","noise","noises"]]
+array12 = [["ars", "artis","f","art","arts"],["dolor", "dolor","m","grief","pains"],["clamor", "clamoris","m","shout","shouts"],["timor", "timoris","m","fear","fears"],["hiems", "hiemis","f","winter","winters"],["panis", "panis","m","bread","bread"]]
+array14 = [["tempus", "temporis","n","time","tiimes"],["cor", "cordis","n","heart","hearts"],["finis", "finis","m","end","boundaries"],["funus", "funeris","n","funeral","funerals"],["iter", "itineris","n","journey","journeys"],["laus", "laudis","f","praise","praises"],["munus", "muneris","n","gift","gifts"],["mors", "mortis","f","death","deaths"],["nubes", "nubis","f","cloud","clouds"],["nox", "noctis","f","night","nights"],["onus", "oneris","n","burden","burdens"],["os", "ossi","n","bone","bones"],["os", "oris","n","mouth","mouths"],["pecus", "pecoris","n","livestock","sheep and cattle"]]
+array15 = [["lex", "legis","f","law","laws"],["pax", "pacis","f","peace","peace"],["lux", "lucis","f","light","lights"],["vox", "vocis","f","voice","voices"],["", "","f","",""]]
+array16 = [["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""]]
+array17 = [["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""]]
+array18 = [["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""]]
+array19 = [["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""]]
+array20 = [["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""]]
+array21 = [["dies", "diei","m","day","days"],["res", "rei","f","thing","things"],["fides", "fidei","f","good faith","trust"],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""],["", "","f","",""]]
+array22 = [["aestus", "aestus","m","heat","heat"],["arcus", "arcus","m","arch","arches"],["domus", "domus","f","house","houses"],["manus", "manus","f","hand","hands"],["fletus", "fletus","m","weeping","tears"],["metus", "metus","m","fear","fear"],["nasus", "nasus","m","nose","noses"],["risus", "risus","m","laugh","laughs"]]
+*/
+
+var ranIndx = Math.floor(Math.random() * array.length);
+var ranNoun = new Noun(array[ranIndx][0], array[ranIndx][1], array[ranIndx][2], array[ranIndx][3], array[ranIndx][4]);
+
+var ranIndx1 = Math.floor(Math.random() * array1.length);
+var ranNoun1 = new Noun(array1[ranIndx1][0], array1[ranIndx1][1], array1[ranIndx1][2], array1[ranIndx1][3], array1[ranIndx1][4]);
+
+var ranIndx2 = Math.floor(Math.random() * array2.length);
+var ranNoun2 = new Noun(array2[ranIndx2][0], array2[ranIndx2][1], array2[ranIndx2][2], array2[ranIndx2][3], array2[ranIndx2][4]);
+
+var ranIndx3 = Math.floor(Math.random() * array3.length);
+var ranNoun3 = new Noun(array3[ranIndx3][0], array3[ranIndx3][1], array3[ranIndx3][2], array3[ranIndx3][3], array3[ranIndx3][4]);
+
+var ranIndx4 = Math.floor(Math.random() * array4.length);
+var ranNoun4 = new Noun(array4[ranIndx4][0], array4[ranIndx4][1], array4[ranIndx4][2], array4[ranIndx4][3], array4[ranIndx4][4]);
+
+var ranIndx5 = Math.floor(Math.random() * array5.length);
+var ranNoun5 = new Noun(array5[ranIndx5][0], array5[ranIndx5][1], array5[ranIndx5][2], array5[ranIndx5][3], array5[ranIndx5][4]);
+
+var ranIndx6 = Math.floor(Math.random() * array6.length);
+var ranNoun6 = new Noun(array6[ranIndx6][0], array6[ranIndx6][1], array6[ranIndx6][2], array6[ranIndx6][3], array6[ranIndx6][4]);
+
+var ranIndx7 = Math.floor(Math.random() * array7.length);
+var ranNoun7 = new Noun(array7[ranIndx7][0], array7[ranIndx7][1], array7[ranIndx7][2], array7[ranIndx7][3], array7[ranIndx7][4]);
+
+var ranIndx8 = Math.floor(Math.random() * array8.length);
+var ranNoun8 = new Noun(array8[ranIndx8][0], array8[ranIndx8][1], array8[ranIndx8][2], array8[ranIndx8][3], array8[ranIndx8][4]);
+
+var ranIndx9 = Math.floor(Math.random() * array9.length);
+var ranNoun9 = new Noun(array9[ranIndx9][0], array9[ranIndx9][1], array9[ranIndx9][2], array9[ranIndx9][3], array9[ranIndx9][4]);
+
+
+
+var verb = [["amo", "I love"],["vides","You see"], ["videt", "She sees"], ["amamus", "We love"]];
+
+var verb2 = [["videmus", "We see"],["amatis", "Y'all love"], ["spectant", "They look at"]];
+var ranVerbIndex = Math.floor(Math.random() * verb2.length);
+
+var dativeVerb = [["do", "I give"],["demonstras","You show"], ["dat", "He gives"], ["demonstramus", "We show"],["traditis", "Y'all hand over"], ["dant", "They give"]];
+var ranDatVerbIndex = Math.floor(Math.random() * dativeVerb.length);
+
+var verb3rdPlural = [["amant", "love"],["vident","see"], ["regunt", "rule"], ["monent", "warn"],["audiunt", "hear"], ["spectant", "look at"]];
+var ranVerb3rdPluralIndex = Math.floor(Math.random() * verb3rdPlural.length);
+
+console.log(ranNoun4.nominativePl)
+console.log(ranNoun)
+
+
+var wordList = [["amo", "amare", "amavi","amatus", "love", "loving", "loved", "loved"],["laudo", "laudare", "laudavi","laudatus", "praise", "praising", "praised", "praised"],["moveo", "movēre", "movi","motus", "move", "moving", "moved", "moved"],["moneo", "monēre", "monui","monitus", "warn", "warning", "warned", "warned"],["teneo", "tenēre", "tenui","tentus", "hold", "holding", "held", "held"],["terreo", "terrēre", "terrui","territus", "frighten", "frightening", "frightened", "frightened"],["duco", "ducere", "duxi","ductus", "lead", "leading", "led", "led"],["frango", "frangere", "frēgi","fractus", "break", "breaking", "broke", "broken"],["mitto", "mittere", "mīsi","missus", "send", "sending", "sent", "sent"],["capio", "capere", "cēpi","captus", "take", "taking", "took", "take"],["voco", "vocare", "vocavi","vocatus", "call", "calling", "called", "called"]];
+            
+
+//[["amo", "amare", "amavi","amatus", "love", "loving", "loved", "loved"],["laudo", "laudare", "laudavi","laudatus", "praise", "praising", "praised", "praised"],["observo", "observare", "observavi","observatus", "observe", "observing", "observed", "observed"],["paro", "parare", "paravi","paratus", "prepare", "preparing", "prepared", "prepared"],["specto", "spectare", "spectavi","spectatus", "look at", "looking at", "lookd at", "looked at"],["habeo", "habēre", "habui","habitus", "have", "having", "had", "had"],["moveo", "movēre", "movi","motus", "move", "moving", "moved", "moved"],["moneo", "monēre", "monui","monitus", "warn", "warning", "warned", "warned"],["teneo", "tenēre", "tenui","tentus", "hold", "holding", "held", "held"],["terreo", "terrēre", "terrui","territus", "frighten", "frightening", "frightened", "frightened"],["duco", "ducere", "duxi","ductus", "lead", "leading", "led", "led"],["frango", "frangere", "frēgi","fractus", "break", "breaking", "broke", "broken"],["mitto", "mittere", "mīsi","missus", "send", "sending", "sent", "sent"],["capio", "capere", "cēpi","captus", "capture", "capturing", "captured", "captured"],["facio", "facere", "fēci","factus", "make", "making", "made", "made"],["audio", "audire", "audivi","auditus", "hear", "hearing","heard","heard"],["voco", "vocare", "vocavi","vocatus", "call", "calling", "called", "called"],["video", "vidēre", "vīdi","visus", "see", "seeing", "saw", "seen"]];
+var wordList2 = [["sedoo", "sedere", "sedi","sessurus", "sit", "sitting", "sat", "sat"],["sto", "stare", "steti","status", "stand", "standing", "stood", "stood"],["dormio", "dormire", "dormivi","dormitus", "sleep", "sleeping","slept","slept"],["venio", "venire", "vēni","ventus", "come", "coming","came","come"]];
+            
+var i = Math.floor(Math.random() * wordList.length);
+var j = Math.floor(Math.random() * wordList2.length);
+
+var verbArray = [wordList[i][0],wordList[i][1],wordList[i][2],wordList[i][3],wordList[i][4],wordList[i][5],wordList[i][6],wordList[i][7]];
+var verbArray2 = [wordList2[j][0],wordList2[j][1],wordList2[j][2],wordList2[j][3],wordList2[j][4],wordList2[j][5],wordList2[j][6],wordList2[j][7]];
+
+
+      
+
+            
+console.log("Random Verb Array Selected: " + verbArray);
+var ranVerb = new Verb(verbArray[0],verbArray[1],verbArray[2],verbArray[3],verbArray[4],verbArray[5],verbArray[6],verbArray[7]);
+var ranVerb2 = new Verb(verbArray2[0],verbArray2[1],verbArray2[2],verbArray2[3],verbArray[4],verbArray2[5],verbArray2[6],verbArray2[7]);
+
+
+//var ranIndx4 = Math.floor(Math.random() * array4.length);
+//var ranNoun4 = new Noun(array4[ranIndx4][0], array4[ranIndx4][1], array4[ranIndx4[2], array4[ranIndx4][3], array4[ranIndx4][4]);
+//ranNoun1 = new Noun(array[0][0], array[0][1], array[0][2], array[0][3], array[0][4]);
+//console.log(ranNoun4.nominativeSing)
+
+//var ranNounCase = [ranNoun.nominativeSing,ranNoun.genitiveSing,ranNoun.dativeSing,ranNoun.accusativeSing,ranNoun.ablativeSing,ranNoun.nominativePl,ranNoun.genitivePl,ranNoun.dativePl,ranNoun.accusativePl,ranNoun.ablativePl];
+
+var ranNounCase = [
+    //0
+    {case: "nominative singular",
+    latinCase:ranNoun1.nominativeSing,
+    latinTrans: ranNoun1.nominativeSingTrans},
+    //1
+    {case: "genitive singular",
+    latinCase:ranNoun2.genitiveSing,
+    latinTrans: ranNoun2.genitiveSingTrans},
+    //2
+    {case: "dative singular",
+    latinCase:ranNoun3.dativeSing,
+    latinTrans: ranNoun3.dativeSingTrans},
+    //3
+    {case: "accusative singular",
+    latinCase:ranNoun4.accusativeSing,
+    latinTrans: ranNoun4.accusativeSingTrans},
+    //4
+    {case: "ablative singular",
+    latinCase:ranNoun5.ablativeSing,
+    latinTrans: ranNoun5.dativeSingTrans},
+    //5
+    {case: "vocative singular",
+    latinCase:ranNoun.vocativeSing,
+    latinTrans: ranNoun.vocativeSingTrans},
+    //6
+    {case: "nominative plural",
+    latinCase:ranNoun3.nominativePl,
+    latinTrans: ranNoun3.nominativePlTrans},
+    //7
+    {case: "genitive plural",
+    latinCase:ranNoun2.genitivePl,
+    latinTrans: ranNoun2.genitivePlTrans},
+    //8
+    {case: "dative plural",
+    latinCase:ranNoun1.dativePl,
+    latinTrans: ranNoun1.dativePlTrans},
+    //9
+    {case: "accusative plural",
+    latinCase:ranNoun6.accusativePl,
+    latinTrans: ranNoun6.accusativePlTrans},
+    //10
+    {case: "ablative plural",
+    latinCase:ranNoun7.ablativePl,
+    latinTrans: ranNoun7.ablativePlTrans},
+    //11
+    {case: "vocative plural",
+    latinCase:ranNoun.vocativePl,
+    latinTrans: ranNoun.vocativePlTrans}
+];
+
+
+
+console.log(ranNounCase[0].case)
+
+     //lab  monday 9:40 oct0ber 12 vernon 206 talcotteville 
+     //physical 9:30 monday october 19
+//shuffle(ranNounCase);
+
+
+var question = "";
+var options =[];
+var answer = "";
+
+// Latin noun quiz data
+const quizData = [
+
+     
+
+    {
+        question: "Which noun is in the " + ranNounCase[1].case +"?",
+        //question: "What is the " + ranNounCase[0].case + " of " + "\""  + ranNoun1.nominativeSing + "\"(" + ranNoun1.nominativeSingTrans + ")?",
+        options: [ranNounCase[3].latinCase, ranNounCase[4].latinCase, ranNounCase[1].latinCase, ranNounCase[5].latinCase],
+        answer: ranNounCase[1].latinCase
+    },
+    {
+        question: "Which noun is in the "  + ranNounCase[4].case +"?",
+        options: [ranNounCase[6].latinCase, ranNounCase[9].latinCase, ranNounCase[3].latinCase, ranNounCase[4].latinCase],
+        answer: ranNounCase[4].latinCase
+    },
+    {
+        question: "Which noun is in the "  + ranNounCase[6].case +"?",
+        options: [ranNounCase[3].latinCase, ranNounCase[6].latinCase, ranNounCase[7].latinCase, ranNounCase[10].latinCase],
+        answer: ranNounCase[6].latinCase
+    },
+    
+    {
+        question: "Which noun is in the " + ranNounCase[8].case +"?",
+        //question: "What is the " + ranNounCase[0].case + " of " + "\""  + ranNoun1.nominativeSing + "\"(" + ranNoun1.nominativeSingTrans + ")?",
+        options: [ranNounCase[8].latinCase, ranNounCase[7].latinCase, ranNounCase[4].latinCase, ranNounCase[9].latinCase],
+        answer: ranNounCase[8].latinCase
+    },
+    {
+        question: "Which noun is in the "  + ranNounCase[3].case +"?",
+        options: [ranNounCase[7].latinCase, ranNounCase[4].latinCase, ranNounCase[5].latinCase, ranNounCase[3].latinCase],
+        answer: ranNounCase[3].latinCase,
+    },
+    {
+        question: "Which noun is in the "  + ranNounCase[5].case +"?",
+        options: [ranNounCase[10].latinCase, ranNounCase[1].latinCase, ranNounCase[9].latinCase, ranNounCase[5].latinCase],
+        answer: ranNounCase[5].latinCase
+    },
+        {
+        question: "Which noun is in the "  + ranNounCase[7].case +"?",
+        options: [ranNounCase[7].latinCase, ranNounCase[8].latinCase, ranNounCase[3].latinCase, ranNounCase[4].latinCase],
+        answer: ranNounCase[7].latinCase
+    },
+    {
+        question: "What is the accusative singular of " + "\""  + ranNoun.nominativeSing + "\"(" + ranNoun.nominativeSingTrans + ")?",
+        options: [ranNoun.nominativeSing, ranNoun.ablativeSing, ranNoun.genitivePl, ranNoun.accusativeSing],
+        answer: ranNoun.accusativeSing
+    },
+    {
+        question: "What is the genitive singular of " + "\""  + ranNoun5.nominativeSing + "\"(" + ranNoun5.nominativeSingTrans + ")?",
+        options: [ranNoun5.nominativeSing, ranNoun5.genitiveSing, ranNoun5.ablativeSing, ranNoun5.dativePl],
+        answer: ranNoun5.genitiveSing
+    },
+     {
+        question: "What is the accusative plural of " + "\""  + ranNoun4.nominativeSing + "\"(" + ranNoun4.nominativeSingTrans + ")?",
+        options: [ranNoun4.dativePl, ranNoun4.genitivePl, ranNoun4.accusativePl, ranNoun4.accusativeSing],
+        answer: ranNoun4.accusativePl
+    },
+    {
+        question: "What is the ablative plural of " + "\""  + ranNoun2.nominativeSing + "\"(" + ranNoun2.nominativeSingTrans + ")?",
+        options: [ranNoun2.ablativeSing, ranNoun2.genitivePl, ranNoun2.nominativePl, ranNoun2.ablativePl],
+        answer: ranNoun2.ablativePl
+    },
+     {
+        question: "What is the best translation of " + "\""  + ranNoun.dativeSing + "\"" + "?",
+        options: [ranNoun.vocativeSingTrans, ranNoun.genitivePlTrans, ranNoun.dativeSingTrans, ranNoun.accusativeSingTrans],
+        answer: ranNoun.dativeSingTrans
+    },
+   
+   {
+        question: "What is the best translation of " + "\""  + ranNoun7.nominativePl + "\"" + "?",
+        options: [ranNoun7.vocativeSingTrans, ranNoun7.nominativePlTrans, ranNoun7.dativePlTrans, ranNoun7.ablativeSingTrans],
+        answer: ranNoun7.nominativePlTrans
+    },
+    {
+        question: "What is the best translation of " + "\""  + ranNoun3.genitiveSing + "\"" + "?",
+        options: [ranNoun3.vocativeSingTrans, ranNoun3.genitiveSingTrans, ranNoun3.dativePlTrans, ranNoun3.ablativeSingTrans],
+        answer: ranNoun3.genitiveSingTrans
+    },
+    {
+        question: "What is the best translation of " + "\""  + ranNoun2.genitivePl + "\"" + "?",
+        options: [ranNoun2.ablativePlTrans, ranNoun2.accusativePlTrans, ranNoun2.genitivePlTrans, ranNoun2.dativePlTrans],
+        answer: ranNoun2.genitivePlTrans
+    },
+    {
+        question: "What is the best translation of " + "\""  + ranNoun1.dativeSing + "\"" +  "?",
+        options: [ranNoun1.vocativeSingTrans, ranNoun1.accusativeSingTrans, ranNoun1.dativeSingTrans, ranNoun1.genitivePlTrans],
+        answer: ranNoun1.dativeSingTrans
+    },
+    
+    {
+      question: "_____________ " + " " + ranNoun1.accusativePl + " " + verb3rdPlural[ranVerb3rdPluralIndex][0] + ".  The " +  ranNoun.nominativePlTrans + " " + verb3rdPlural[ranVerb3rdPluralIndex][1] + " " + ranNoun1.accusativePlTrans + ".",
+      options: [ranNoun.accusativeSing, ranNoun.nominativeSing, ranNoun.nominativePl, ranNoun.ablativePl],
+      answer: ranNoun.nominativePl
+   },
+    {
+      question: "_____________ " + verb[ranVerbIndex][0] + ".  " + verb[ranVerbIndex][1] + " " + ranNoun5.accusativePlTrans.toUpperCase() + ".",
+      options: [ranNoun5.dativePl,ranNoun5.accusativePl,ranNoun5.accusativeSing,ranNoun5.dativeSing],
+      answer: ranNoun5.accusativePl
+   },
+  {
+      question: ranNoun2.accusativePl + " " + "_________________" + " " + verb2[ranVerbIndex][0] + ".  " + verb2[ranVerbIndex][1] + " " + ranNoun2.accusativePlTrans + " " + ranNoun9.genitiveSingTrans.toUpperCase() + ".",
+      options: [ranNoun9.accusativePl, ranNoun9.accusativeSing, ranNoun9.ablativePl, ranNoun9.genitiveSing],
+      answer: ranNoun9.genitiveSing
+   },
+   {
+      question: "_______________" + " in " + ranNoun2.ablativeSing + " " + verb[ranVerbIndex][0] + ".  " + verb[ranVerbIndex][1] + " " + ranNoun7.accusativeSingTrans.toUpperCase() + " in the " + ranNoun2.nominativeSingTrans + ".",
+      options: [ranNoun7.accusativeSing,ranNoun7.ablativePl,ranNoun7.genitivePl,ranNoun7.accusativePl],
+      answer:  ranNoun7.accusativeSing
+   },
+    {
+      question: ranNoun.nominativeSing + " " + ranNoun6.accusativePl + " in " + "_____________" + ranVerb.thirdSingImp + ".   The " + ranNoun.nominativeSingTrans + " " + ranVerb.thirdSingImpTrans + " " + ranNoun6.accusativePlTrans + " in the " + ranNoun2.nominativeSingTrans.toUpperCase() + ".",
+      options: [ranNoun2.accusativeSing,ranNoun2.ablativeSing,ranNoun2.genitivePl,ranNoun2.accusativePl],
+      answer:  ranNoun2.ablativeSing 
+   },
+   
+   {
+      question: ranNoun5.accusativeSing + " _________________" + " " + dativeVerb[ranDatVerbIndex][0] + ".  "  + dativeVerb[ranDatVerbIndex][1] + "  " + ranNoun5.accusativeSingTrans + " " +  ranNoun8.dativeSingTrans.toUpperCase() + ".",
+      options: [ranNoun8.nominativeSing, ranNoun8.accusativeSing, ranNoun8.ablativePl, ranNoun8.dativeSing],
+      answer: ranNoun8.dativeSing
+   },
+   
+   {
+      question:  "_______________" + "! " + " Noli " +ranNoun1.accusativeSing + " " + ranVerb.actInfPres + "!  " + ranNoun.vocativeSingTrans.toUpperCase() + " Don't " + ranVerb.verb + " " + ranNoun1.accusativeSingTrans + "!",
+      options: [ranNoun.vocativeSing,ranNoun.ablativeSing,ranNoun.genitiveSing,ranNoun.accusativeSing],
+      answer:  ranNoun.vocativeSing 
+   },
+   {
+      question:  ranNoun9.nominativeSing + " exclamavit, " + "\"Dicite mihi, " + "_______________," + " nomina vestra!\"  The "  + ranNoun9.nominativeSingTrans + " shouted, \"Tell me, " + ranNoun8.nominativePlTrans + ", your names!",
+      options: [ranNoun8.dativePl,ranNoun8.nominativePl, ranNoun8.nominativeSing,ranNoun8.accusativeSing],
+      answer:  ranNoun8.nominativePl 
+   },
+   {
+      question: ranNoun.nominativeSing + " " + ranNoun1.accusativeSing + " " + "___________________ custodiebat.  "  + "  The " +  ranNoun.nominativeSingTrans + " was guarding "  + " " + ranNoun1.accusativeSingTrans + " WITH A " + ranNoun6.nominativeSingTrans.toUpperCase() + ".",
+      options: [ranNoun6.accusativeSing,  ranNoun6.nominativeSing, ranNoun6.ablativeSing, ranNoun6.genitivePl],
+      answer: ranNoun6.ablativeSing
+   },
+     
+] 
+
+//var i = 0;
+//console.log(shuffle(quizData[i].options));
+
+
+
+//shuffle(quizData[0].options)
+//shuffle(quizData[1].options)
+//shuffle(quizData[2].options)
+/*
+quizData = quizData.map(q => {
+    const shuffledOptions = shuffle([...q.options]);
+    return {...q, options: shuffledOptions};
+});
+*/
+
+// Function to prepare the quiz by shuffling options for all questions
+//https://www.google.com/search?q=how+to+shuffle+options+in+several+multiple+choice+questions+in+javascript&sca_esv=36438ba7c1a93fd1&source=hp&ei=_M9NaeyRKf2dwbkPq570sQY&iflsig=AOw8s4IAAAAAaU3eDNlhtWDJkOfXmxgfcKW4zq6aZjya&ved=0ahUKEwjs_4SX-dmRAxX9TjABHSsPPWYQ4dUDCB0&oq=how+to+shuffle+options+in+several+multiple+choice+questions+in+javascript&gs_lp=Egdnd3Mtd2l6Iklob3cgdG8gc2h1ZmZsZSBvcHRpb25zIGluIHNldmVyYWwgbXVsdGlwbGUgY2hvaWNlIHF1ZXN0aW9ucyBpbiBqYXZhc2NyaXB0SLcVUKkIWKkIcAF4AJABAJgBTaABTaoBATG4AQzIAQD4AQL4AQGYAgGgAgaoAgrCAgoQABgDGOoCGI8BmAMG8QUMNFgClSPSG5IHATGgB32yBwC4BwDCBwMyLTHIBwOACAA&sclient=gws-wiz&sei=AtBNae3KI5SwwbkP1tji8AE&safe=active&ssui=on
+function prepareQuiz(questions) {
+    return questions.map(question => {
+        // Shuffle the options for the current question
+        const shuffledOptions = shuffle(question.options);
+        
+        // Return a new question object with the shuffled options
+        return {
+            ...question,
+            options: shuffledOptions
+        };
+    });
+}
+
+prepareQuiz(quizData);
+
+// You can now use the 'shuffledQuiz' array to display your questions and options
+//console.log(shuffledQuiz);
+
+
+/*
+function shuffledOptions([...dataQuiz[i].options]){
+   i=0
+}
+quizData.forEach(shuffledOptions())
+
+*/
+
+
+/*,
+    {
+        question: "What is the " + ranNounCase[0].case + " of " + "\""  + ranNoun.nominativeSing + "\"(" + ranNoun.nominativeSingTrans + ")?",
+        options: [ranNounCase[0].latinCase, ranNounCase[2].latinCase, ranNounCase[4].latinCase, ranNounCase[6].latinCase],
+        answer: ranNounCase[0].latinCase
+    },
+    {
+        question: "What is the nominative plural of " + "\"" + ranNoun1.nominativeSing + "\"" + " " + "(" + ranNoun1.nominativeSingTrans + ")?",
+        options: [ranNoun1.genitivePl, ranNoun1.ablativeSing, ranNoun1.accusativeSing, ranNoun1.genitiveSing],
+        answer: ranNoun1.genitiveSing
+    },
+    {
+        question: "What is the accusative plural of 'servus' (slave)?",
+        options: ["servos", "servi", "servorum", "servis"],
+        answer: "servos"
+    },
+    {
+        question: "What is the ablative singular of 'rosa' (rose)?",
+        options: ["rosae", "rosam", "rosa", "rosarum"],
+        answer: "rosa"
+    }
+];
+*/
+
+
+let currentQuestion = 0;
+let score = 0;
+let attempts = 0;
+
+// Load a question
+function loadQuestion() {
+    
+    const q = quizData[currentQuestion];
+    document.getElementById("question").textContent = q.question;
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    //shuffledOptions.forEach(option => {
+    q.options.forEach(option => {
+        
+        const label = document.createElement("label");
+        label.classList.add("option");
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "answer";
+        input.value = option;
+
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + option));
+        optionsDiv.appendChild(label);
+    });
+}
+
+// Get selected answer
+function getSelected() {
+    const answers = document.getElementsByName("answer");
+    for (let ans of answers) {
+        if (ans.checked) {
+            return ans.value;
+        }
+    }
+    return null;
+}
+
+// Handle next button click
+document.getElementById("nextBtn").addEventListener("click", () => {
+    document.getElementById("result").innerHTML ="";
+    const selected = getSelected();
+    if (!selected) {
+        document.getElementById("result").innerHTML = "Oops! Select an answer!";
+        //document.getElementById("result").style.color = "white";
+        document.getElementById("result").style.color = "black";
+        document.getElementById("result").style.backgroundColor = "yellow";
+        return;
+    }
+
+    if (selected !== quizData[currentQuestion].answer) {
+        document.getElementById("result").innerHTML = "Oops! Try again!";
+        document.getElementById("result").style.color = "black";
+        document.getElementById("result").style.backgroundColor = "yellow";
+        document.getElementById("result").style.width = "auto";
+        
+        //alert("Oops! Try again!")
+        attempts++;
+        return;
+    }
+
+    if (selected === quizData[currentQuestion].answer) {
+        attempts++;
+        score++;
+    
+        //document.getElementById("nextBtn").onclick = loadQuestion;
+        //loadQuestion();
+
+    }
+
+
+    currentQuestion++;
+    
+    if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } else {
+        
+        document.getElementById("question").textContent = "Quiz Completed!";
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("result").textContent = 
+            `Your score: ${score} / ${attempts}`;
+            
+    }
+    
+});
+
+/*
+//currentQuestion++;
+    for (let currentQuestion = 1; currentQuestion <= 1; currentQuestion++) {
+    //if (currentQuestion < quizData.length) {
+        loadQuestion();
+    } //else {
+
+    if (currentQuestion >= 2){
+        document.getElementById("question").textContent = "Quiz Completed!";
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("result").textContent = 
+            `Your score: ${score} / ${attempts}`;
+    }
+});
+*/
+
+// Initialize quiz
+loadQuestion();
+</script>
+
+</body>
+</html>
