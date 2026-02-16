@@ -320,8 +320,7 @@ class Noun {
     } else if (this.genitive.slice(-2,) == "is"){
         if (this.nominative == "canis"){
             return this.genitive.slice(0,-2) + "um";
-        } else if (this.nominative.slice(-2,) == "rb" || this.nominative.slice(-2,) == "nt" || this.nominative.slice(-2,) == "rt"){
-        // if (this.nominative.slice(-2,) == "rb" || "nt" || "rt"){
+        } else if (this.nominative.slice(-2,) == "bs" || this.nominative.slice(-2,) == "ns" || this.nominative.slice(-2,) == "rs"){
           return this.genitive.slice(0,-2) + "ium";
         } else if (this.gender == "n"){
             if (this.nominative.slice(-2,) == "re" || this.nominative.slice(-2,) == "al"){
@@ -1476,7 +1475,7 @@ var array = [];
 /*
 var array = [["umbra","umbrae","f","ghost","ghosts"],["regina", "reginae","f","queen","queens"],["magistra", "magistrae","f","teacher","teachers"]];
 var array1 = [["auriga", "aurigae","m","charioteer","charioteers"],["dea","deae","f","goddess","goddesses"],["pirata", "piratae","m","pirate","pirates"],["nauta","nautae","m","sailor","sailors"]];
-var array2 = [["cena","cenae","f","dinner","dinners"],["toga","togae","f","toga","togas"],["tunica","tunicae","f","tunic","tunics"],["corona", "corona","f","crown","crowns"],["culpa", "culpae","f","fault","faults"],["flamma", "flammae","f","flame","flames"],["mensa", "mensae","f","table","tables"],["pecunia", "pecunia","f","money","money"],["vita", "vitae","f","life","lives"]];
+var array2 = [["cena","cenae","f","dinner","dinners"],["toga","togae","f","toga","togas"],["tunica","tunicae","f","tunic","tunics"],["corona", "coronae","f","crown","crowns"],["culpa", "culpae","f","fault","faults"],["flamma", "flammae","f","flame","flames"],["mensa", "mensae","f","table","tables"],["pecunia", "pecuniae","f","money","money"],["vita", "vitae","f","life","lives"]];
 var array3 = [["arena", "arenae","f","arena","arenas"],["ara", "arae","f","altar","altars"],["piscina","piscinae","f","fishpond","fishponds"],["ianua","ianuae","f","door","doors"],["porta","portae","f","gate","gates"],["via","viae","f","street","streets"]["villa","villae","f","house","houses"],["silva","silvae","f","forest","forests"],["aqua","aquae","f","water","waters"],["casa", "casae","f","cottage","cottages"],["caupona", "cauponae","f","inn","inn"],["fossa", "fossae","f","ditch","ditches"],["culina", "culinae","f","kitchen","kitchens"],["rosa","rosae","f","rose","roses"],["luna","lunae","f","moon","moons"],["stella","stellae","f","star","stars"],["unda", "undae","f","wave","waves"],["uva", "uvae","f","grape","bunch of grapes"]];
 var array4 = [["caupona", "cauponae","f","inn","inn"],["fossa", "fossae","f","ditch","ditches"],["culina", "culinae","f","kitchen","kitchens"],["rosa","rosae","f","rose","roses"],["luna","lunae","f","moon","moons"],["stella","stellae","f","star","stars"],["unda", "undae","f","wave","waves"],["uva", "uvae","f","grape","bunch of grapes"]];
 var array5 = [["via","viae","f","street","streets"]["villa","villae","f","house","houses"],["silva","silvae","f","forest","forests"],["aqua","aquae","f","water","waters"],["casa", "casae","f","cottage","cottages"]];
@@ -1667,11 +1666,8 @@ var answer = "";
 // Latin noun quiz data
 const quizData = [
 
-     
-
     {
         question: "Which noun is in the " + ranNounCase[1].case +"?",
-        //question: "What is the " + ranNounCase[0].case + " of " + "\""  + ranNoun1.nominativeSing + "\"(" + ranNoun1.nominativeSingTrans + ")?",
         options: [ranNounCase[3].latinCase, ranNounCase[4].latinCase, ranNounCase[1].latinCase, ranNounCase[5].latinCase],
         answer: ranNounCase[1].latinCase
     },
@@ -1688,7 +1684,6 @@ const quizData = [
     
     {
         question: "Which noun is in the " + ranNounCase[8].case +"?",
-        //question: "What is the " + ranNounCase[0].case + " of " + "\""  + ranNoun1.nominativeSing + "\"(" + ranNoun1.nominativeSingTrans + ")?",
         options: [ranNounCase[8].latinCase, ranNounCase[7].latinCase, ranNounCase[4].latinCase, ranNounCase[9].latinCase],
         answer: ranNounCase[8].latinCase
     },
@@ -1699,7 +1694,7 @@ const quizData = [
     },
     {
         question: "Which noun is in the "  + ranNounCase[5].case +"?",
-        options: [ranNounCase[10].latinCase, ranNounCase[1].latinCase, ranNounCase[9].latinCase, ranNounCase[5].latinCase],
+        options: [ranNounCase[10].latinCase, ranNounCase[2].latinCase, ranNounCase[9].latinCase, ranNounCase[5].latinCase],
         answer: ranNounCase[5].latinCase
     },
         {
